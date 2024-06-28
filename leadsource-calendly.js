@@ -4,6 +4,9 @@ function processUTM(){
     const utmSource = url.searchParams.get('utm_source');
     const utmMedium = url.searchParams.get('utm_medium');
     const utmCampaign = url.searchParams.get('utm_campaign');
+    const fbClickID = url.searchParams.get('fbclid');
+    const googleClickID = url.searchParams.get('gclid');
+    const gAdSource = url.searchParams.get('gad_source');
 
     let leadSource;
     let actionPoint;
@@ -15,8 +18,25 @@ function processUTM(){
         campaign = utmCampaign;
     }
 
-    if(utmMedium === 'ig'){
-        leadSource = isPaidLead ? 'Instagram - Paid' : 'Instagram - Organic'
+    if(!utmMedium){
+        if(fbClickID){
+            leadSource = 'Facebook Organic';
+        }else if(googleClickID){
+            leadSource = 'Google Search Organic';
+        }else{
+            leadSource = 'Direct URL';
+        }
+    }else if(utmMedium === 'ig'){
+        leadSource = isPaidLead ? 'Instagram Paid' : 'Instagram Organic'
+    }else if(utmMedium === 'fb'){
+        leadSource = isPaidLead ? 'Facebook Paid' : 'Facebook Organic'
+    }else if(utmSource === 'googleads' && utmMedium === 'cpc'){
+        leadSource = 'Google Search Paid';
+    }
+    
+    if(gAdSource){
+        isPaidLead = true;
+        leadSource = 'Google Search Paid';
     }
 
     if(url.hostname === 'nudo.com.au'){
