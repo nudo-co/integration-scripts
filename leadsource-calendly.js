@@ -28,11 +28,15 @@ function processUTM(){
         actionPoint = `${url.hostname}${url.pathname}`;
     }
 
-    return {
+    const utm = {
         utmCampaign: campaign,
         utmSource: leadSource,
-        utmActionPoint: actionPoint,
-   }
+        utmContent: actionPoint
+    }
+
+    console.log("Deubg:", utm);
+
+    return utm;
 }
 
 function initiateCalendly(calendarURL, embedDivId){
