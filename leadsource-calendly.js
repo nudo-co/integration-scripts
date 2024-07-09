@@ -68,3 +68,12 @@ function initiateCalendly(calendarURL, embedDivId){
     });
 }
 
+function updateCalendlyLink(){
+    const utm = processUTM();
+
+    $("a[href^='https://calendly.com/']").each(function(){
+        const updatedUrl = `${this.href}&utm_source=${utm.utmSource}&utm_campaign=${utm.utmCampaign}&utm_content=${utm.utmContent}`;
+        this.href = updatedUrl;
+    });
+}
+
