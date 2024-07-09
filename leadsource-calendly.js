@@ -72,7 +72,10 @@ function updateCalendlyLink(){
     const utm = processUTM();
 
     $("a[href^='https://calendly.com/']").each(function(){
-        const updatedUrl = `${this.href}&utm_source=${utm.utmSource}&utm_campaign=${utm.utmCampaign}&utm_content=${utm.utmContent}`;
+        let updatedUrl = `${this.href}&utm_source=${utm.utmSource}&utm_content=${utm.utmContent}`;
+        if(utm.utmCampaign){
+            updatedUrl = `${updatedUrl}&utm_campaign=${utm.utmCampaign}`;
+        }
         this.href = updatedUrl;
     });
 }
