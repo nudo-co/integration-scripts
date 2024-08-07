@@ -60,6 +60,8 @@ function processUTM(){
 }
 
 function initiateCalendly(calendarURL, embedDivId){
+    const utmData = processUTM();
+    console.log("UTM Data being passed to Calendly:", utmData);
     Calendly.initInlineWidget({
         url: calendarURL,
         parentElement: document.getElementById(embedDivId),
