@@ -71,12 +71,23 @@ function initiateCalendly(calendarURL, embedDivId){
 function updateCalendlyLink(){
     const utm = processUTM();
 
-    $("a[href^='https://calendly.com/']").each(function(){
-        let updatedUrl = `${this.href}&utm_source=${utm.utmSource}&utm_content=${utm.utmContent}`;
-        if(utm.utmCampaign){
-            updatedUrl = `${updatedUrl}&utm_campaign=${utm.utmCampaign}`;
-        }
-        this.href = updatedUrl;
-    });
+    if($){
+        $("a[href^='https://calendly.com/']").each(function(){
+            let updatedUrl = `${this.href}&utm_source=${utm.utmSource}&utm_content=${utm.utmContent}`;
+            if(utm.utmCampaign){
+                updatedUrl = `${updatedUrl}&utm_campaign=${utm.utmCampaign}`;
+            }
+            this.href = updatedUrl;
+        });
+    }else{
+        document.querySelectorAll("a[href^='https://calendly.com/']").forEach(function(link) {
+            let updatedUrl = `${link.href}&utm_source=${utm.utmSource}&utm_content=${utm.utmContent}`;
+            if (utm.utmCampaign) {
+                updatedUrl = `${updatedUrl}&utm_campaign=${utm.utmCampaign}`;
+            }
+            link.href = updatedUrl;
+        });
+    }
+    
 }
 
