@@ -1,112 +1,134 @@
 let inputData = {
-    // contactAttributionUTMSource: "paid_social",
-    // contactAttributionSourceReferrer: "http://m.facebook.com",
-    // contactAttributionSourceCampaign: "NUDO BR TOF Leads - Website NEW",
-    contactAttributionSourceURL: "https://www.eventsbynudo.com.au/landing-page-page730496?utm_source=paid_social&utm_medium=fb&utm_campaign=NUDO+BR+TOF+Leads+-+Website+NEW&utm_content=TWM+LP+|+Colourful+Image+|+Personalised&fbclid=IwAR17oP4oLoSvR_DZJatLa_eushFMVlPCMQ_K_RKV9JLqo-UBcKN3U0_KPe4_aem_ASfQN-wfa6IPYIEnQY7Zk8wX8wpZWCIVu7RuZ57w_OgRAbwtMx78_yu1fLs459yS3zNe-zC2Ep6o0EX_U3fL7Yep#section-zggJWREjTP",
+  // contactAttributionUTMSource: "paid_social",
+  // contactAttributionSourceReferrer: "http://m.facebook.com",
+  // contactAttributionSourceCampaign: "NUDO BR TOF Leads - Website NEW",
+  contactAttributionSourceURL:
+    "https://www.eventsbynudo.com.au/landing-page-page730496?utm_source=paid_social&utm_medium=fb&utm_campaign=NUDO+BR+TOF+Leads+-+Website+NEW&utm_content=TWM+LP+|+Colourful+Image+|+Personalised&fbclid=IwAR17oP4oLoSvR_DZJatLa_eushFMVlPCMQ_K_RKV9JLqo-UBcKN3U0_KPe4_aem_ASfQN-wfa6IPYIEnQY7Zk8wX8wpZWCIVu7RuZ57w_OgRAbwtMx78_yu1fLs459yS3zNe-zC2Ep6o0EX_U3fL7Yep#section-zggJWREjTP",
 
-    lastAttributionUTMSource: "paid_social_website",
-    // lastAttributionSourceReferrer: "http://m.facebook.com",
-    lastAttributionSourceCampaign: "TTM x IMMERSO BR TOF Leads - Website",
-    lastAttributionSourceURL: "https://eventsbynudo.com.au/nudo-mof-landing-page?utm_source=googleads&utm_source=adwords&utm_medium=cpc&utm_medium={adname}&utm_campaign=PMAX&utm_campaign={campaignname}&utm_term={keyword&utm_content={adgroupname}&utm_keyword=&utm_matchtype=&campaign_id=21106583272&ad_group_id=&ad_id=&gad_source=5&gclid=EAIaIQobChMIpIPqsKeWiAMVsahmAh0uvCxOEAEYASAAEgJFjvD_BwE",
+  lastAttributionUTMSource: "paid_social_website",
+  // lastAttributionSourceReferrer: "http://m.facebook.com",
+  lastAttributionSourceCampaign: "TTM x IMMERSO BR TOF Leads - Website",
+  lastAttributionSourceURL:
+    "https://eventsbynudo.com.au/nudo-mof-landing-page?utm_source=googleads&utm_source=adwords&utm_medium=cpc&utm_medium={adname}&utm_campaign=PMAX&utm_campaign={campaignname}&utm_term={keyword&utm_content={adgroupname}&utm_keyword=&utm_matchtype=&campaign_id=21106583272&ad_group_id=&ad_id=&gad_source=5&gclid=EAIaIQobChMIpIPqsKeWiAMVsahmAh0uvCxOEAEYASAAEgJFjvD_BwE",
 
-    // facebookID: "tests",
-    // sourceCampaign: "testes"
+  // facebookID: "tests",
+  // sourceCampaign: "testes"
 }
 
 // Define available variables
-let sourceRef = inputData.lastAttributionSourceReferrer ? inputData.lastAttributionSourceReferrer : inputData.contactAttributionSourceReferrer;
-let sourceURL = inputData.lastAttributionSourceURL ? inputData.lastAttributionSourceURL : inputData.contactAttributionSourceURL;
+let sourceRef = inputData.lastAttributionSourceReferrer
+  ? inputData.lastAttributionSourceReferrer
+  : inputData.contactAttributionSourceReferrer
+
+let sourceURL = inputData.lastAttributionSourceURL
+  ? inputData.lastAttributionSourceURL
+  : inputData.contactAttributionSourceURL
+
+if (sourceURL && sourceURL.includes("services.leadconnectorhq.com")) {
+  sourceURL = inputData.contactAttributionSourceURL
+}
 
 // Define outputs
-let isPaidLead = false;
-let leadCampaign = null;
-let leadSource = null;
-let leadAction = null;
+let isPaidLead = false
+let leadCampaign = null
+let leadSource = null
+let leadAction = null
 
-function getSourceAndAction(referrer, sourceUrl, isPaid){
-    let source;
-    let actionPoint;
+function getSourceAndAction(referrer, sourceUrl, isPaid) {
+  let source
+  let actionPoint
+  let url
 
-    
-    let url = new URL(sourceUrl);
-
-    const utmMedium = url.searchParams.get("utm_medium");
-
-    if(utmMedium){
-        // First processing preference is directly taking from the URL
-
-        if(utmMedium === 'fb'){
-            source = `Facebook ${isPaid ? 'Paid' : 'Organic'}`;
-        }else if(utmMedium === 'ig'){
-            source = `Instagram ${isPaid ? 'Paid' : 'Organic'}`;
-        }else if(utmMedium === 'cpc'){
-            source = `Google Search Paid'}`;
-        }else{
-            source = "Direct URL";
-        }
-    }else{
-        if(!referrer){
-            source = "Direct URL";
-        }else if(referrer.includes("facebook") || referrer.includes("fb")){
-            source = `Facebook ${isPaid ? 'Paid' : 'Organic'}`;
-        }else if(referrer.includes("instagram")){
-            source = `Instagram ${isPaid ? 'Paid' : 'Organic'}`;
-        }else if(referrer.includes("google")){
-            source = `Google Search ${isPaid ? 'Paid' : 'Organic'}`;
-        }else{
-            source = "Direct URL";
-        }
-    }
-
-
-    if(url.hostname === 'nudo.com.au'){
-        actionPoint = 'Nudo Website';
-    }else if(url.pathname.includes("contact")){
-        // Venue website - we don't need the path
-        actionPoint = url.hostname;
-    }else{
-        actionPoint = `${url.hostname}${url.pathname}`;
-    }
-
+  try {
+    url = new URL(sourceUrl)
+    // Continue processing with the valid URL here
+  } catch {
     return {
-        source, actionPoint
+      source: "Direct URL",
+      actionPoint: null,
     }
+  }
+
+  const utmMedium = url.searchParams.get("utm_medium")
+  const utmSource = url.searchParams.get("utm_source")
+
+  if (utmMedium) {
+    // First processing preference is directly taking from the URL
+
+    if (utmMedium === "fb") {
+      source = `Facebook ${isPaid ? "Paid" : "Organic"}`
+    } else if (utmMedium === "ig") {
+      source = `Instagram ${isPaid ? "Paid" : "Organic"}`
+    } else if (utmMedium === "cpc" || (utmSource && utmSource === "adwords")) {
+      source = `Google Search Paid`
+    } else if (utmMedium === "pinterest") {
+      source = `Pinterest ${isPaid ? "Paid" : "Organic"}`
+    }
+  }
+
+  if (!utmMedium || !source) {
+    if (!referrer) {
+      source = "Direct URL"
+    } else if (referrer.includes("facebook") || referrer.includes("fb")) {
+      source = `Facebook ${isPaid ? "Paid" : "Organic"}`
+    } else if (referrer.includes("instagram")) {
+      source = `Instagram ${isPaid ? "Paid" : "Organic"}`
+    } else if (referrer.includes("google")) {
+      source = `Google Search ${isPaid ? "Paid" : "Organic"}`
+    } else {
+      source = "Direct URL"
+    }
+  }
+
+  if (url.hostname === "nudo.com.au") {
+    actionPoint = "Nudo Website"
+  } else if (url.pathname.includes("contact")) {
+    // Venue website - we don't need the path
+    actionPoint = url.hostname
+  } else {
+    actionPoint = `${url.hostname}${url.pathname}`
+  }
+
+  return {
+    source,
+    actionPoint,
+  }
 }
 
 // First check if this is a paid lead
 // Has to come from a campaign or has "paid" inside the UTM source
-if(
-    inputData.lastAttributionSourceCampaign || 
-    (inputData.lastAttributionUTMSource && inputData.lastAttributionUTMSource.toLowerCase().includes("paid")
-)
-){
-    isPaidLead = true;
+if (
+  inputData.lastAttributionSourceCampaign ||
+  (inputData.lastAttributionUTMSource &&
+    inputData.lastAttributionUTMSource.toLowerCase().includes("paid"))
+) {
+  isPaidLead = true
 
-    leadCampaign = inputData.lastAttributionSourceCampaign;
+  leadCampaign = inputData.lastAttributionSourceCampaign
 
-    const sourceAndAction = getSourceAndAction(sourceRef, sourceURL, true);
-    leadSource = sourceAndAction.source;
-    leadAction = sourceAndAction.actionPoint;
-}else{
-    if(inputData.facebookID){
-        // Special case for instant forms
-        isPaidLead = true;
-        leadCampaign = inputData.sourceCampaign;
-        leadSource = "Facebook Paid (Instant form)";
-        leadAction = "Instant form";
-    }else{
-        // This has to be organic
-        const sourceAndAction = getSourceAndAction(sourceRef, sourceURL, false);
-        leadSource = sourceAndAction.source;
-        leadAction = sourceAndAction.actionPoint;
-    }
+  const sourceAndAction = getSourceAndAction(sourceRef, sourceURL, true)
+  leadSource = sourceAndAction.source
+  leadAction = sourceAndAction.actionPoint
+} else {
+  if (inputData.facebookID) {
+    // Special case for instant forms
+    isPaidLead = true
+    leadCampaign = inputData.sourceCampaign
+    leadSource = "Facebook Paid (Instant form)"
+    leadAction = "Instant form"
+  } else {
+    // This has to be organic
+    const sourceAndAction = getSourceAndAction(sourceRef, sourceURL, false)
+    leadSource = sourceAndAction.source
+    leadAction = sourceAndAction.actionPoint
+  }
 }
 
 output = {
-    isPaidLead,
-    leadCampaign,
-    leadSource,
-    leadAction
+  isPaidLead,
+  leadCampaign,
+  leadSource,
+  leadAction,
 }
 
-console.log(output);
+console.log(output)
