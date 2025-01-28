@@ -10,19 +10,50 @@ let inputData = {
   lastAttributionSourceCampaign: "TTM x IMMERSO BR TOF Leads - Website",
   lastAttributionSourceURL:
     "https://eventsbynudo.com.au/nudo-mof-landing-page?utm_source=googleads&utm_source=adwords&utm_medium=cpc&utm_medium={adname}&utm_campaign=PMAX&utm_campaign={campaignname}&utm_term={keyword&utm_content={adgroupname}&utm_keyword=&utm_matchtype=&campaign_id=21106583272&ad_group_id=&ad_id=&gad_source=5&gclid=EAIaIQobChMIpIPqsKeWiAMVsahmAh0uvCxOEAEYASAAEgJFjvD_BwE",
+  attributionSourceURL: "",
+  attributionUTMSource: "",
+  attributionSourceReferrer: "",
+  attributionSourceCampaign: "",
 
   // facebookID: "tests",
   // sourceCampaign: "testes"
 }
+let sourceRef
+let sourceURL
+let sourceCampaign
+let utmSource
 
-// Define available variables
-let sourceRef = inputData.lastAttributionSourceReferrer
-  ? inputData.lastAttributionSourceReferrer
-  : inputData.contactAttributionSourceReferrer
+if (inputData.lastAttributionSourceReferrer) {
+  sourceRef = inputData.lastAttributionSourceReferrer
+} else if (inputData.attributionSourceReferrer) {
+  sourceRef = inputData.attributionSourceReferrer
+} else {
+  sourceRef = inputData.contactAttributionSourceReferrer
+}
 
-let sourceURL = inputData.lastAttributionSourceURL
-  ? inputData.lastAttributionSourceURL
-  : inputData.contactAttributionSourceURL
+if (inputData.lastAttributionSourceURL) {
+  sourceURL = inputData.lastAttributionSourceURL
+} else if (inputData.attributionSourceURL) {
+  sourceURL = inputData.attributionSourceURL
+} else {
+  sourceURL = inputData.contactAttributionSourceURL
+}
+
+if (inputData.lastAttributionSourceCampaign) {
+  sourceCampaign = inputData.lastAttributionSourceCampaign
+} else if (inputData.attributionSourceCampaign) {
+  sourceCampaign = inputData.attributionSourceCampaign
+} else {
+  sourceCampaign = inputData.contactAttributionSourceCampaign
+}
+
+if (inputData.lastAttributionUTMSource) {
+  utmSource = inputData.lastAttributionUTMSource
+} else if (inputData.attributionUTMSource) {
+  utmSource = inputData.attributionUTMSource
+} else {
+  utmSource = inputData.contactAttributionUTMSource
+}
 
 if (sourceURL && sourceURL.includes("services.leadconnectorhq.com")) {
   sourceURL = inputData.contactAttributionSourceURL
@@ -97,14 +128,9 @@ function getSourceAndAction(referrer, sourceUrl, isPaid) {
 
 // First check if this is a paid lead
 // Has to come from a campaign or has "paid" inside the UTM source
-if (
-  inputData.lastAttributionSourceCampaign ||
-  (inputData.lastAttributionUTMSource &&
-    inputData.lastAttributionUTMSource.toLowerCase().includes("paid"))
-) {
+if (sourceCampaign || (utmSource && utmSource.toLowerCase().includes("paid"))) {
   isPaidLead = true
-
-  leadCampaign = inputData.lastAttributionSourceCampaign
+  leadCampaign = sourceCampaign
 
   const sourceAndAction = getSourceAndAction(sourceRef, sourceURL, true)
   leadSource = sourceAndAction.source
